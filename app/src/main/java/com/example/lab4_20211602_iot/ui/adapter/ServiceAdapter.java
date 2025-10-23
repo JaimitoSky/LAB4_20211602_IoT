@@ -35,16 +35,26 @@ public class ServiceAdapter extends RecyclerView.Adapter<ServiceAdapter.VH> {
         return new VH(view);
     }
 
-    @Override public void onBindViewHolder(@NonNull VH h, int pos) {
+    @Override
+    public void onBindViewHolder(@NonNull VH h, int pos) {
         ServiceReminder s = data.get(pos);
+
         h.tvName.setText(s.nombre);
-        String sub = "S/. " + s.monto + " • vence " + DateUtils.formatDate(s.fechaVencimientoMs);
+
+        String hora = new java.text.SimpleDateFormat("HH:mm",
+                java.util.Locale.getDefault()).format(new java.util.Date(s.fechaVencimientoMs));
+
+        String sub = "S/. " + String.format(java.util.Locale.US, "%.2f", s.monto)
+                + " • vence " + DateUtils.formatDate(s.fechaVencimientoMs)
+                + " " + hora;
+
         h.tvAmountDate.setText(sub);
 
         h.btnEdit.setOnClickListener(v -> listener.onEdit(s));
         h.btnDelete.setOnClickListener(v -> listener.onDelete(s));
         h.btnPaid.setOnClickListener(v -> listener.onPaid(s));
     }
+
 
     @Override public int getItemCount() { return data.size(); }
 

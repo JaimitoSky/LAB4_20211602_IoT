@@ -2,6 +2,7 @@ package com.example.lab4_20211602_iot.ui;
 
 import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
+import android.app.TimePickerDialog;
 import android.os.Bundle;
 import android.text.TextUtils;
 import android.widget.ArrayAdapter;
@@ -20,8 +21,11 @@ import com.example.lab4_20211602_iot.util.DateUtils;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.textfield.MaterialAutoCompleteTextView;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 
 public class EditServiceActivity extends AppCompatActivity {
 
@@ -31,6 +35,8 @@ public class EditServiceActivity extends AppCompatActivity {
 
     private long editingId = 0L;
     private long dueMs = 0L;
+
+    private int selHour = 9, selMin = 0;
 
     @Override protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -54,15 +60,36 @@ public class EditServiceActivity extends AppCompatActivity {
                 this, R.array.importance_labels, android.R.layout.simple_list_item_1));
 
         etDate.setOnClickListener(v -> {
-            final Calendar c = Calendar.getInstance();
-            if (dueMs > 0) c.setTimeInMillis(dueMs);
-            new DatePickerDialog(this, (view, y, m, d) -> {
-                Calendar cal = Calendar.getInstance();
-                cal.set(Calendar.YEAR, y); cal.set(Calendar.MONTH, m); cal.set(Calendar.DAY_OF_MONTH, d);
-                cal.set(Calendar.HOUR_OF_DAY, 9); cal.set(Calendar.MINUTE, 0); cal.set(Calendar.SECOND, 0);
-                dueMs = cal.getTimeInMillis();
-                etDate.setText(DateUtils.formatDate(dueMs));
-            }, c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
+            final Calendar base = Calendar.getInstance();
+            if (dueMs > 0) base.setTimeInMillis(dueMs);
+
+            int y = base.get(Calendar.YEAR);
+            int m = base.get(Calendar.MONTH);
+            int d = base.get(Calendar.DAY_OF_MONTH);
+
+            new DatePickerDialog(this, (view, yy, mm, dd) -> {
+                final Calendar now = Calendar.getInstance();
+                int defaultH = (dueMs > 0) ? base.get(Calendar.HOUR_OF_DAY) : now.get(Calendar.HOUR_OF_DAY);
+                int defaultMin = (dueMs > 0) ? base.get(Calendar.MINUTE) : now.get(Calendar.MINUTE);
+
+                new TimePickerDialog(this, (tp, hour, minute) -> {
+                    selHour = hour;
+                    selMin = minute;
+
+                    Calendar cal = Calendar.getInstance();
+                    cal.set(Calendar.YEAR, yy);
+                    cal.set(Calendar.MONTH, mm);
+                    cal.set(Calendar.DAY_OF_MONTH, dd);
+                    cal.set(Calendar.HOUR_OF_DAY, selHour);
+                    cal.set(Calendar.MINUTE, selMin);
+                    cal.set(Calendar.SECOND, 0);
+                    cal.set(Calendar.MILLISECOND, 0);
+                    dueMs = cal.getTimeInMillis();
+
+                    etDate.setText(formatDateTime(dueMs));
+                }, defaultH, defaultMin, true).show();
+
+            }, y, m, d).show();
         });
 
         // Modo edición
@@ -74,7 +101,14 @@ public class EditServiceActivity extends AppCompatActivity {
                     etName.setText(s.nombre);
                     etAmount.setText(String.valueOf(s.monto));
                     dueMs = s.fechaVencimientoMs;
-                    etDate.setText(DateUtils.formatDate(dueMs));
+
+                    etDate.setText(formatDateTime(dueMs));
+
+                    Calendar c = Calendar.getInstance();
+                    c.setTimeInMillis(dueMs);
+                    selHour = c.get(Calendar.HOUR_OF_DAY);
+                    selMin = c.get(Calendar.MINUTE);
+
                     spPeriod.setText(labelOf(s.periodicidad), false);
                     spImportance.setText(labelOf(s.importancia), false);
                     break;
@@ -101,7 +135,7 @@ public class EditServiceActivity extends AppCompatActivity {
 
         double amount = Double.parseDouble(amountStr);
         ServiceReminder s = new ServiceReminder();
-        s.id = editingId; // 0 si es nuevo
+        s.id = editingId;
         s.nombre = name;
         s.monto = amount;
         s.fechaVencimientoMs = dueMs;
@@ -143,5 +177,11 @@ public class EditServiceActivity extends AppCompatActivity {
         if (s.equalsIgnoreCase("Alta")) return Importance.ALTA;
         if (s.equalsIgnoreCase("Media")) return Importance.MEDIA;
         return Importance.BAJA;
+    }
+
+    private String formatDateTime(long millis) {
+        String d = DateUtils.formatDate(millis); // dd/MM/yyyy
+        String h = new SimpleDateFormat("HH:mm", Locale.getDefault()).format(new Date(millis));
+        return d + " • " + h;
     }
 }
