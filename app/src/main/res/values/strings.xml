@@ -1,3 +1,24 @@
 <resources>
     <string name="app_name">Lab4_20211602_IoT</string>
+    <string name="menu_history">Historial</string>
+    <string name="title_history">Historial de pagos</string>
+
+    <string name="empty_services">Aún no tienes servicios registrados.</string>
+    <string name="empty_history">No hay pagos registrados.</string>
+
+    <string name="add_service">Agregar servicio</string>
+    <string name="btn_save">Guardar</string>
+    <string name="btn_edit">Editar</string>
+    <string name="btn_paid">Pagado</string>
+    <string name="btn_delete">Borrar</string>
+
+    <string name="hint_name">Nombre del servicio</string>
+    <string name="hint_amount">Monto (S/.)</string>
+    <string name="hint_date">Fecha de vencimiento</string>
+    <string name="hint_periodicity">Periodicidad</string>
+    <string name="hint_importance">Importancia</string>
+
+    <string name="confirm_delete">¿Eliminar este servicio?</string>
+    <string name="ok">Aceptar</string>
+    <string name="cancel">Cancelar</string>
 </resources>

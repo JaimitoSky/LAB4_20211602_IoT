@@ -1,0 +1,8 @@
+<resources>
+    <string-array name="periodicity_labels">
+        <item>Una vez</item><item>Mensual</item><item>Bimestral</item><item>Trimestral</item><item>Anual</item>
+    </string-array>
+    <string-array name="importance_labels">
+        <item>Alta</item><item>Media</item><item>Baja</item>
+    </string-array>
+</resources>
