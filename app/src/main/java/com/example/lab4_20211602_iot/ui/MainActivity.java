@@ -1,5 +1,6 @@
 package com.example.lab4_20211602_iot.ui;
 
+import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
@@ -16,6 +17,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.lab4_20211602_iot.R;
 import com.example.lab4_20211602_iot.data.local.Repository;
 import com.example.lab4_20211602_iot.data.model.ServiceReminder;
+import com.example.lab4_20211602_iot.notif.NotificationHelper;
 import com.example.lab4_20211602_iot.ui.adapter.ServiceAdapter;
 import com.example.lab4_20211602_iot.ui.dialog.ConfirmDeleteDialog;
 import com.google.android.material.appbar.MaterialToolbar;
@@ -39,6 +41,7 @@ public class MainActivity extends AppCompatActivity implements ServiceAdapter.Li
     @Override protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        NotificationHelper.ensureChannels(this);
 
         repo = new Repository(this);
         MaterialToolbar tb = findViewById(R.id.toolbar);
@@ -59,6 +62,7 @@ public class MainActivity extends AppCompatActivity implements ServiceAdapter.Li
         refresh();
     }
 
+    @SuppressLint("NotifyDataSetChanged")
     private void refresh() {
         data.clear();
         data.addAll(repo.getAllServices());
