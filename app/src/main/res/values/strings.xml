@@ -21,4 +21,9 @@
     <string name="confirm_delete">¿Eliminar este servicio?</string>
     <string name="ok">Aceptar</string>
     <string name="cancel">Cancelar</string>
+
+
+    <string name="confirm_paid_title">Confirmar pago</string>
+    <string name="paid_summary">Servicio: %1$s\nMonto: S/. %2$.2f\nVencimiento: %3$s\n\n¿Marcar como pagado ahora?</string>
+    <string name="paid_done_toast">Pago registrado</string>
 </resources>

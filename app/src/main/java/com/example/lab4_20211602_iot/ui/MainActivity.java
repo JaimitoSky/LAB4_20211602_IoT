@@ -1,11 +1,13 @@
 package com.example.lab4_20211602_iot.ui;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Toast;
 
 import androidx.activity.result.ActivityResultLauncher;
 import androidx.activity.result.contract.ActivityResultContracts;
@@ -20,6 +22,7 @@ import com.example.lab4_20211602_iot.data.model.ServiceReminder;
 import com.example.lab4_20211602_iot.notif.NotificationHelper;
 import com.example.lab4_20211602_iot.ui.adapter.ServiceAdapter;
 import com.example.lab4_20211602_iot.ui.dialog.ConfirmDeleteDialog;
+import com.example.lab4_20211602_iot.ui.dialog.MarkPaidDialog;
 import com.google.android.material.appbar.MaterialToolbar;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
@@ -85,7 +88,12 @@ public class MainActivity extends AppCompatActivity implements ServiceAdapter.Li
     }
 
     @Override public void onPaid(ServiceReminder s) {
-        // Se implementará en Commit 4 (pagos + historial)
+        MarkPaidDialog.show(this, s, () -> {
+            Context ctx = getApplicationContext();
+            new Repository(ctx).markAsPaid(s.id, System.currentTimeMillis());
+            Toast.makeText(this, R.string.paid_done_toast, Toast.LENGTH_SHORT).show();
+            refresh();
+        });
     }
 
     // Menú

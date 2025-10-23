@@ -1,5 +1,6 @@
 package com.example.lab4_20211602_iot.ui.adapter;
 
+import android.annotation.SuppressLint;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,10 +24,12 @@ public class HistoryAdapter extends RecyclerView.Adapter<HistoryAdapter.VH> {
         return new VH(LayoutInflater.from(p.getContext()).inflate(R.layout.item_history, p, false));
     }
 
+    @SuppressLint("SetTextI18n")
     @Override public void onBindViewHolder(@NonNull VH h, int pos) {
         PaymentHistoryItem it = data.get(pos);
         h.tvTitle.setText(it.nombreServicio + " • S/. " + it.montoPagado);
-        String sub = "Pagado el " + DateUtils.formatDate(it.fechaPagoMs);
+        String sub = "Pagado el " + DateUtils.formatDate(it.fechaPagoMs)
+                + " • " + it.anticipacionDias + " días antes";
         h.tvSubtitle.setText(sub);
     }
 
